@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Training Lab - Badge Program</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Fraunces:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --accent: #f59e0b;
+            --accent-dark: #d97706;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --transition: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .display-font {
+            font-family: 'Fraunces', serif;
+            font-weight: 900;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1.25rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 9999px;
+            transition: all 0.2s var(--transition);
+            color: var(--primary);
+        }
+
+        .back-btn:hover { background: #eff6ff; }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .header-title p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #eff6ff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid #dbeafe;
+        }
+
+        .user-badge span {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        /* Onboarding */
+        .onboarding {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        .onboarding-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 2.5rem;
+            box-shadow: 0 20px 60px rgba(37, 99, 235, 0.15);
+            max-width: 28rem;
+            width: 100%;
+            border: 1px solid white;
+            animation: slideUp 0.6s var(--transition);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .onboarding-icon {
+            width: 5rem; height: 5rem;
+            background: var(--primary);
+            border-radius: 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+            transform: rotate(3deg);
+        }
+
+        .onboarding-icon svg { width: 2.5rem; height: 2.5rem; color: white; }
+
+        .onboarding h1 { font-size: 2rem; font-weight: 900; text-align: center; margin-bottom: 0.5rem; }
+
+        .onboarding-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-weight: 500; }
+
+        .form-group { margin-bottom: 1rem; }
+
+        .form-group label {
+            display: block; font-size: 0.875rem; font-weight: 700; color: var(--text);
+            margin-bottom: 0.5rem; padding: 0 0.25rem;
+        }
+
+        .form-group input {
+            width: 100%; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1rem;
+            padding: 1rem 1.25rem; font-size: 1.125rem; font-weight: 500; color: var(--text);
+            transition: all 0.2s var(--transition);
+        }
+
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+
+        .btn-primary {
+            width: 100%; background: var(--primary); color: white; border: none;
+            padding: 1rem; border-radius: 1rem; font-size: 1rem; font-weight: 700;
+            cursor: pointer; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s var(--transition);
+        }
+
+        /* Main Content */
+        main { padding: 2.5rem 0 5rem; }
+
+        .search-container { max-width: 48rem; margin: 0 auto 2.5rem; position: relative; }
+
+        .search-icon {
+            position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); width: 1.25rem; height: 1.25rem; pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%; background: white; border: 2px solid var(--border); border-radius: 2rem;
+            padding: 1.25rem 2rem 1.25rem 3.5rem; font-size: 1.125rem; font-weight: 500; color: var(--text);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); transition: all 0.3s var(--transition);
+        }
+
+        .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 15px 50px rgba(37, 99, 235, 0.15); }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; max-width: 48rem; margin: 0 auto 2.5rem; }
+
+        .stat-card { background: white; padding: 1.5rem; border-radius: 2rem; border: 1px solid var(--border); text-align: center; box-shadow: 0 2px 8px var(--shadow); }
+
+        .stat-value { font-size: 1.75rem; font-weight: 900; margin-bottom: 0.25rem; }
+        .stat-value.primary { color: var(--primary); }
+        .stat-value.accent { color: var(--accent); }
+
+        .stat-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.375rem;
+            background: rgba(226, 232, 240, 0.5); border-radius: 1rem; max-width: 24rem;
+            margin: 0 auto 2.5rem; border: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.625rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 700;
+            border: none; background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s var(--transition);
+        }
+
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+
+        /* Badge Grid */
+        .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.5rem; }
+
+        .badge-card {
+            background: white; border: 1px solid var(--border); border-radius: 1.5rem; padding: 1.25rem;
+            display: flex; flex-direction: column; align-items: center; cursor: pointer;
+            transition: all 0.3s var(--transition); position: relative;
+        }
+
+        .badge-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15); }
+
+        .badge-card.earned { background: linear-gradient(135deg, white 0%, #fef3c7 100%); border: 2px solid #fcd34d; }
+
+        .badge-icon {
+            width: 3.5rem; height: 3.5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem; background: #eff6ff; color: var(--primary);
+        }
+
+        .badge-card.earned .badge-icon { background: #fef3c7; color: var(--accent); }
+
+        .badge-icon svg { width: 1.75rem; height: 1.75rem; }
+
+        .badge-title { font-weight: 700; color: var(--text); text-align: center; font-size: 0.875rem; line-height: 1.3; }
+
+        .badge-level { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+        .badge-check { position: absolute; top: 0.75rem; right: 0.75rem; color: var(--accent); width: 1.25rem; height: 1.25rem; }
+
+        /* Detail View */
+        .detail-container { max-width: 64rem; margin: 0 auto; }
+
+        .status-card {
+            padding: 2rem; border-radius: 2.5rem; border: 1px solid var(--border); display: flex;
+            flex-direction: column; align-items: center; gap: 1rem; text-align: center; margin-bottom: 2rem; background: white;
+        }
+
+        .status-card.earned { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; }
+
+        .status-icon {
+            width: 5rem; height: 5rem; border-radius: 1.5rem; display: flex; align-items: center;
+            justify-content: center; background: #eff6ff; color: var(--primary);
+        }
+
+        .status-card.earned .status-icon { background: rgba(255, 255, 255, 0.2); color: white; }
+
+        .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+
+        @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+
+        .requirements-section, .questions-section, .submit-section, .sage-section {
+            background: white; padding: 2rem; border-radius: 2.5rem; border: 1px solid var(--border);
+        }
+
+        .section-title { font-size: 1.125rem; font-weight: 900; color: var(--text); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .requirements-list { list-style: none; }
+
+        .requirement-item { display: flex; gap: 1rem; padding: 0.75rem 0; cursor: pointer; user-select: none; }
+
+        .requirement-checkbox {
+            width: 1.5rem; height: 1.5rem; border: 2px solid var(--border); border-radius: 0.5rem;
+            flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+
+        .requirement-checkbox.checked { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .requirement-text { font-weight: 500; font-size: 0.95rem; }
+
+        .btn-submit, .btn-endorse { width: 100%; padding: 1rem; border-radius: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+
+        .btn-submit { background: #0f172a; color: white; margin-top: 1rem; }
+        .btn-endorse { background: #10b981; color: white; }
+        .btn-endorse:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-endorse.revoke { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+
+        .sage-panel { margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 1rem; border: 1px solid var(--border); }
+
+        .user-card { background: white; border: 1px solid var(--border); border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1rem; }
+        .user-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .user-card-name { font-weight: 900; }
+
+        .notification {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: #0f172a; color: white; padding: 1rem 2rem; border-radius: 9999px;
+            z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hidden { display: none !important; }
+        
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        
+        .modal-card { background: white; padding: 2rem; border-radius: 2rem; width: 100%; max-width: 20rem; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- Onboarding -->
+    <div id="onboarding" class="onboarding">
+        <div class="onboarding-card">
+            <div class="onboarding-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+            </div>
+            <h1 class="display-font">Hello!</h1>
+            <p class="onboarding-subtitle">Software Training Lab Badge Program.</p>
+            <div class="form-group">
+                <label>What is your full name?</label>
+                <input type="text" id="user-name-input" placeholder="John Doe">
+            </div>
+            <button id="start-btn" class="btn-primary">Start Training</button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="hidden">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="header-left">
+                        <button id="back-btn" class="back-btn hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                        </button>
+                        <div class="header-title">
+                            <h1 id="header-title">Welcome</h1>
+                            <p id="header-subtitle">Earn badges to prove your skills!</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <button id="admin-btn" class="back-btn" title="Admin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </button>
+                        <button id="logout-btn" class="back-btn" title="Switch User">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                        </button>
+                        <div class="user-badge">
+                            <span id="current-user-name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Dashboard View -->
+            <div id="dashboard-view">
+                <div class="search-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search software...">
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><p class="stat-value primary" id="stat-total">0</p><p class="stat-label">Total Badges</p></div>
+                    <div class="stat-card"><p class="stat-value accent" id="stat-earned">0</p><p class="stat-label">Earned</p></div>
+                </div>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="all">All</button>
+                    <button class="tab-btn" data-tab="earned">My Badges</button>
+                </div>
+                <div id="badge-grid" class="badge-grid"></div>
+            </div>
+
+            <!-- Detail View -->
+            <div id="detail-view" class="detail-container hidden">
+                <div id="status-card" class="status-card">
+                    <div class="status-icon" id="detail-icon-box"></div>
+                    <h2 id="detail-title"></h2>
+                    <p id="detail-status-text"></p>
+                </div>
+                <div class="detail-grid">
+                    <div>
+                        <div class="requirements-section">
+                            <h3 class="section-title">Requirements</h3>
+                            <ul id="requirements-list" class="requirements-list"></ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="submit-section">
+                            <h3 class="section-title">Submission</h3>
+                            <input type="url" id="sub-link" placeholder="Box/Drive Folder Link">
+                            <button id="save-sub-btn" class="btn-submit">Save Link</button>
+                        </div>
+                        <div class="sage-section" style="margin-top: 1.5rem;">
+                            <h3 class="section-title">Sage Tools</h3>
+                            <button id="sage-toggle-btn" class="btn-submit" style="background: #f1f5f9; color: #475569;">Unlock Sage Mode</button>
+                            <div id="sage-panel" class="sage-panel hidden">
+                                <p class="sage-instructions">Lead Verification</p>
+                                <button id="endorse-btn" class="btn-endorse">Endorse Badge</button>
+                                <p id="endorse-warning" style="color: #dc2626; font-size: 0.75rem; margin-top: 0.5rem;" class="hidden">Complete all checkboxes first.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin View -->
+            <div id="admin-view" class="hidden">
+                <h2 style="margin-bottom: 2rem;">All Students</h2>
+                <div id="admin-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Authorization</h3>
+            <p style="margin: 0.5rem 0; font-size: 0.875rem; color: var(--text-muted);">Enter "STL Lead" to proceed</p>
+            <input type="password" id="sage-password" placeholder="Password" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); margin: 1rem 0;">
+            <div style="display: flex; gap: 0.5rem;">
+                <button id="cancel-sage" style="flex: 1; padding: 0.75rem; border: none; background: #e2e8f0; border-radius: 0.5rem;">Cancel</button>
+                <button id="confirm-sage" style="flex: 1; padding: 0.75rem; border: none; background: var(--primary); color: white; border-radius: 0.5rem;">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notif" class="notification hidden"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Full 28 Badge Catalog
+        const BADGE_DATA = [
+            { id: "ps-1", software: "Photoshop", level: 1, title: "Digital Imaging Foundations", icon: `<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>`, requirements: ["Image navigation (zoom and pan shortcuts)", "Layer system", "Duplicating layers", "Destructive vs. Non-destructive editing", "Crop tool", "Straighten", "Spot Healing Brush", "Clone Stamp tool", "Red Eye tool", "History panel", "Burn/Dodge tools", "Adjustment Layers", "Masks", "Brush tool"] },
+            { id: "ps-2", software: "Photoshop", level: 2, title: "Composition & Advanced Tools", icon: `<rect width="8" height="8" x="2" y="2" rx="2"/><path d="M14 2c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2"/><path d="M20 2c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2"/>`, requirements: ["Selection tools (Marquee, Lasso, etc)", "Layers panel advanced features", "Combining 2 images using masks", "Filters (Unsharp Mask, Blur)", "Creating a new document (CMYK vs. RGB)", "Brush panel & Eyedropper tool", "Gradient tool & Shape tools", "Type tool & Layer Styles", "Photomerge", "Patch tool & Content-aware fill", "Exporting"] },
+            { id: "ps-3", software: "Photoshop", level: 3, title: "Expert Retouching & Automation", icon: `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`, requirements: ["Actions, Quick Masks, Liquify", "Blending modes", "Custom brushes/shapes", "Camera raw filter", "HDR, Type Masks", "History Brush, Droplets, Scripts", "Channels, Select & Mask", "Smart Objects, Color spaces"] },
+            { id: "ai-1", software: "Illustrator", level: 1, title: "Vector Foundations", icon: `<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>`, requirements: ["Selection & Direct Selection", "Pen tool (straight/curved)", "Shape tools & Builder", "Fills and Strokes", "Swatches & Layers", "Navigating drawing"] },
+            { id: "ai-2", software: "Illustrator", level: 2, title: "Organic Drawing & Advanced Aesthetics", icon: `<circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>`, requirements: ["Pencil, Brush, Curvature", "Eraser & Knife tools", "Gradients, Transparency", "Live paint & Color themes", "Advanced stroke settings", "Appearance panel", "Artboards, Rotating/Reflecting"] },
+            { id: "ai-3", software: "Illustrator", level: 3, title: "Expert Vector Artistry", icon: `<path d="M2 20h20M7 20v-4M12 20v-6M17 20v-9"/>`, requirements: ["Pathfinder panel", "Perspective & Mesh tools", "Symbols & Pattern editing", "3D tools & Clipping masks", "Recolor Artwork", "Envelope warping", "Asset export"] },
+            { id: "id-1", software: "InDesign", level: 1, title: "Layout Foundations", icon: `<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/>`, requirements: ["Format text & Add graphics", "Apply color & Edit content", "Multipage docs basics", "Create Business Card", "Upload to Box/Drive"] },
+            { id: "id-2", software: "InDesign", level: 2, title: "Publication Design", icon: `<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>`, requirements: ["Training lessons 1-4", "6-page magazine spread", "Facing pages & Page numbers", "Threaded text frames", "Parent page elements", "Links panel management"] },
+            { id: "id-3", software: "InDesign", level: 3, title: "Large Format Design", icon: `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/>`, requirements: ["Training lessons 5-8", "Large format poster (11x17+)", "Background & Typography", "Text on a path / Wrap", "Color swatches & Alignment"] },
+            { id: "id-4", software: "InDesign", level: 4, title: "Mastery of Styles", icon: `<circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/>`, requirements: ["Training lessons 9-13", "Multi-page brochure", "Paragraph & Character Styles", "Bullets & Numbering", "Tables & Spanning columns"] },
+            { id: "pr-1", software: "Premiere Pro", level: 1, title: "Video Fundamentals", icon: `<polygon points="5 3 19 12 5 21 5 3"/>`, requirements: ["Import files & Create Sequence", "Premiere Workflow", "In/Out points cutting", "Razor tool & Unlinking", "Background music & Titles", "Exporting project"] },
+            { id: "pr-2", software: "Premiere Pro", level: 2, title: "Advanced Editing & Effects", icon: `<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10v10H7z"/>`, requirements: ["Ripple editing (Q/W)", "Slip, Rolling, Rate Stretch", "Rubber band keyframing", "Markers usage", "Effects: Dip to Black, Cross Dissolve", "Effects: Ultra Key, Warp Stabilizer", "Adjustment layer color", "Fix broken links"] },
+            { id: "pr-3", software: "Premiere Pro", level: 3, title: "Expert Post-Production", icon: `<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>`, requirements: ["Rolling credits & Face pixelation", "Audition noise removal", "After Effects link", "Graphics tab usage", "Multi-cam & Custom presets", "Essential Sound panel"] },
+            { id: "ae-1", software: "After Effects", level: 1, title: "Motion Foundations", icon: `<circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>`, requirements: ["Composition settings", "Selection, Rotation, Text tools", "Import Footage (Cmd+I)", "Layer system & Keyframing", "PSR-T-A Transformations", "Apply 3 Effects", "Quicktime Export"] },
+            { id: "ae-2", software: "After Effects", level: 2, title: "Advanced Motion & VFX", icon: `<polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/>`, requirements: ["Keyframe Easing (Ease In/Out)", "Parenting & Track Mattes", "Masking & Feathering", "Illustrator importing", "Null objects & Tracking", "Rotoscoping & Green Screen"] },
+            { id: "ae-3", software: "After Effects", level: 3, title: "Expert Motion Systems", icon: `<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>`, requirements: ["Graph Mode (Speed/Value)", "Text & Shape Animators", "Trim paths & Wiggle", "3D Lights & Camera", "Content aware fill", "3D Extrusion & Track Camera"] },
+            { id: "xl-1", software: "Excel", level: 1, title: "Data Foundations", icon: `<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18M3 9h18M3 15h18"/>`, requirements: ["Formula writing basics", "Cell formatting & Types", "SUM, AVERAGE, MIN, MAX", "Sorting & Filtering data"] },
+            { id: "xl-2", software: "Excel", level: 2, title: "Intermediate Analysis", icon: `<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>`, requirements: ["VLOOKUP / XLOOKUP", "Pivot Tables & Charts", "IF/THEN logic", "Nested formulas", "Conditional Formatting"] },
+            { id: "xl-3", software: "Excel", level: 3, title: "Expert Automation", icon: `<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`, requirements: ["Record/edit Macros", "Data validation", "Drop-down menus", "Advanced lookups", "VBA basics"] },
+            { id: "wd-1", software: "Word", level: 1, title: "Professional Documents", icon: `<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>`, requirements: ["Styles (Heading 1, 2, 3)", "Table of Contents", "Section Breaks", "Page Numbering", "Citations & Bibliography"] },
+            { id: "wd-2", software: "Word", level: 2, title: "Advanced Formatting", icon: `<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/>`, requirements: ["Custom Styles", "Mail Merge", "Form controls", "Track Changes & Comments", "Advanced Citations"] },
+            { id: "wd-3", software: "Word", level: 3, title: "Expert Efficiency", icon: `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`, requirements: ["Advanced Templates", "Macros", "Building Blocks", "Document Protection", "Advanced Field Codes"] },
+            { id: "et-1", software: "ETD", level: 1, title: "Intro to Formatting", icon: `<path d="M22 10v6M2 10l10-5 10 5-10 5z"/>`, requirements: ["Basic ETD formatting", "Identify margin/layout errors", "Submission lifecycle"] },
+            { id: "et-2", software: "ETD", level: 2, title: "Senior ETD Consultant", icon: `<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>`, requirements: ["Two semesters experience", "Wiki Knowledge Base", "Word Advanced menus", "Notify Sage of changes"] },
+            { id: "dv-1", software: "DaVinci Resolve", level: 1, title: "Video Editing Essentials", icon: `<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" x2="12" y1="8" y2="8"/>`, requirements: ["Media & Cut Tabs", "Edit Tab: Razor/Fades", "Unlinking audio", "Mixer sliders", "Keyframing rubber band", "Deliver Export"] },
+            { id: "dv-2", software: "DaVinci Resolve", level: 2, title: "Advanced Fusion & Color", icon: `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`, requirements: ["Fusion Nodes & Merging", "Spline adjustment", "Color curves & wheels", "Keyframing color", "Background noise removal"] },
+            { id: "pc-1", software: "Procreate", level: 1, title: "Digital Illustration Basics", icon: `<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>`, requirements: ["Canvas setup & resolution", "Brush settings & Opacity", "Layer management", "Alpha Lock", "Basic selection"] },
+            { id: "pc-2", software: "Procreate", level: 2, title: "Advanced Illustration", icon: `<circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/>`, requirements: ["Advanced Brush panel", "Clipping masks", "Gaussian blur & Liquify", "Automatic selection", "Animation Assist", "Time-lapse export"] }
+        ];
+
+        const firebaseConfig = JSON.parse(window.__firebase_config || '{}');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = window.__app_id || 'badge-tracker';
+
+        let state = {
+            currentUser: null,
+            usersData: {},
+            selectedBadge: null,
+            searchQuery: '',
+            tab: 'all',
+            isSage: false,
+            unsubscribeUsers: null
+        };
+
+        const init = async () => {
+            const initAuth = async () => {
+                if (typeof window.__initial_auth_token !== 'undefined' && window.__initial_auth_token) {
+                    await signInWithCustomToken(auth, window.__initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+            await initAuth();
+
+            onAuthStateChanged(auth, (user) => {
+                if (!user) return;
+                const publicDataCol = collection(db, 'artifacts', appId, 'public', 'data', 'users');
+                if (state.unsubscribeUsers) state.unsubscribeUsers();
+                state.unsubscribeUsers = onSnapshot(publicDataCol, (snapshot) => {
+                    snapshot.forEach(doc => { state.usersData[doc.id] = doc.data(); });
+                    renderAll();
+                });
+                const savedName = localStorage.getItem('stl_user');
+                if (savedName) login(savedName);
+            });
+        };
+
+        const login = async (name) => {
+            if (!auth.currentUser) return;
+            state.currentUser = name;
+            localStorage.setItem('stl_user', name);
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', name);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) {
+                await setDoc(userRef, { name, earned: [], submissions: {}, checklists: {} });
+            }
+            document.getElementById('onboarding').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('current-user-name').textContent = name;
+            renderAll();
+        };
+
+        const renderAll = () => {
+            if (!document.getElementById('dashboard-view').classList.contains('hidden')) renderDashboard();
+            if (!document.getElementById('admin-view').classList.contains('hidden')) renderAdmin();
+            if (!document.getElementById('detail-view').classList.contains('hidden')) renderDetail();
+        };
+
+        const renderDashboard = () => {
+            const data = state.usersData[state.currentUser] || { earned: [], submissions: {} };
+            let filtered = BADGE_DATA;
+            if (state.tab === 'earned') filtered = BADGE_DATA.filter(b => data.earned.includes(b.id));
+            if (state.searchQuery) {
+                const q = state.searchQuery.toLowerCase();
+                filtered = filtered.filter(b => b.software.toLowerCase().includes(q) || b.title.toLowerCase().includes(q));
+            }
+            document.getElementById('stat-total').textContent = BADGE_DATA.length;
+            document.getElementById('stat-earned').textContent = data.earned.length;
+            document.getElementById('badge-grid').innerHTML = filtered.map(badge => {
+                const isEarned = data.earned.includes(badge.id);
+                return `
+                    <div class="badge-card ${isEarned ? 'earned' : ''}" onclick="window.selectBadge('${badge.id}')">
+                        <div class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${badge.icon}</svg></div>
+                        <div class="badge-title">${badge.software}</div>
+                        <div class="badge-level">Level ${badge.level}</div>
+                        ${isEarned ? '<svg class="badge-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.selectBadge = (id) => {
+            state.selectedBadge = BADGE_DATA.find(b => b.id === id);
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
+            document.getElementById('back-btn').classList.remove('hidden');
+            renderDetail();
+        };
+
+        const renderDetail = () => {
+            const badge = state.selectedBadge;
+            const data = state.usersData[state.currentUser] || { earned: [], submissions: {}, checklists: {} };
+            const isEarned = data.earned.includes(badge.id);
+            const checklist = data.checklists?.[badge.id] || [];
+            document.getElementById('detail-title').textContent = `${badge.software} Level ${badge.level}`;
+            document.getElementById('detail-status-text').textContent = isEarned ? 'Verified Professional' : 'Candidate';
+            document.getElementById('status-card').className = `status-card ${isEarned ? 'earned' : ''}`;
+            document.getElementById('detail-icon-box').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${badge.icon}</svg>`;
+            document.getElementById('requirements-list').innerHTML = badge.requirements.map((req, idx) => {
+                const isChecked = checklist.includes(idx);
+                return `<li class="requirement-item" onclick="window.toggleReq(${idx})"><div class="requirement-checkbox ${isChecked ? 'checked' : ''}">${isChecked ? '✓' : ''}</div><span class="requirement-text">${req}</span></li>`;
+            }).join('');
+            document.getElementById('sub-link').value = data.submissions?.[badge.id] || '';
+            const allChecked = checklist.length === badge.requirements.length;
+            const eb = document.getElementById('endorse-btn');
+            eb.disabled = !allChecked;
+            eb.textContent = isEarned ? "Revoke Endorsement" : "Endorse Badge";
+            eb.className = isEarned ? "btn-endorse revoke" : "btn-endorse";
+            document.getElementById('endorse-warning').classList.toggle('hidden', allChecked);
+        };
+
+        window.toggleReq = async (idx) => {
+            if (!auth.currentUser) return;
+            const badge = state.selectedBadge;
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', state.currentUser);
+            const currentData = state.usersData[state.currentUser];
+            let list = currentData.checklists?.[badge.id] || [];
+            if (list.includes(idx)) list = list.filter(i => i !== idx); else list.push(idx);
+            await updateDoc(userRef, { [`checklists.${badge.id}`]: list });
+            renderDetail();
+        };
+
+        const renderAdmin = () => {
+            const list = document.getElementById('admin-list');
+            const users = Object.values(state.usersData);
+            list.innerHTML = users.map(u => `
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <span class="user-card-name">${u.name}</span>
+                        <button class="btn-submit" style="width:auto; margin:0; padding:0.5rem 1rem;" onclick="window.viewUser('${u.name}')">View Profile</button>
+                    </div>
+                    <div style="font-size:0.875rem; color:var(--text-muted); margin-top:0.5rem;">Badges: ${u.earned?.length || 0} / ${BADGE_DATA.length}</div>
+                </div>
+            `).join('');
+        };
+
+        window.viewUser = (name) => {
+            state.currentUser = name;
+            document.getElementById('current-user-name').textContent = name;
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            renderDashboard();
+        };
+
+        document.getElementById('start-btn').onclick = () => {
+            const name = document.getElementById('user-name-input').value.trim();
+            if (name) login(name);
+        };
+        document.getElementById('back-btn').onclick = () => {
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('back-btn').classList.add('hidden');
+            renderDashboard();
+        };
+        document.getElementById('admin-btn').onclick = () => {
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.remove('hidden');
+            document.getElementById('back-btn').classList.remove('hidden');
+            renderAdmin();
+        };
+        document.getElementById('search-input').oninput = (e) => { state.searchQuery = e.target.value; renderDashboard(); };
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.tab = btn.dataset.tab;
+                renderDashboard();
+            };
+        });
+        document.getElementById('save-sub-btn').onclick = async () => {
+            const link = document.getElementById('sub-link').value.trim();
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', state.currentUser);
+            await updateDoc(userRef, { [`submissions.${state.selectedBadge.id}`]: link });
+            notify("Link Saved");
+        };
+        document.getElementById('sage-toggle-btn').onclick = () => {
+            if (state.isSage) { state.isSage = false; document.getElementById('sage-panel').classList.add('hidden'); document.getElementById('sage-toggle-btn').textContent = "Unlock Sage Mode"; }
+            else { document.getElementById('password-modal').classList.remove('hidden'); }
+        };
+        document.getElementById('confirm-sage').onclick = () => {
+            if (document.getElementById('sage-password').value === "STL Lead") {
+                state.isSage = true; document.getElementById('password-modal').classList.add('hidden');
+                document.getElementById('sage-panel').classList.remove('hidden');
+                document.getElementById('sage-toggle-btn').textContent = "Sage Mode Active";
+                document.getElementById('sage-password').value = "";
+            } else notify("Wrong Password");
+        };
+        document.getElementById('cancel-sage').onclick = () => document.getElementById('password-modal').classList.add('hidden');
+        document.getElementById('endorse-btn').onclick = async () => {
+            const badge = state.selectedBadge;
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', state.currentUser);
+            const uData = state.usersData[state.currentUser];
+            let earned = uData.earned || [];
+            if (earned.includes(badge.id)) earned = earned.filter(id => id !== badge.id); else earned.push(badge.id);
+            await updateDoc(userRef, { earned });
+            renderDetail();
+        };
+        document.getElementById('logout-btn').onclick = () => { localStorage.removeItem('stl_user'); location.reload(); };
+        function notify(msg) {
+            const el = document.getElementById('notif'); el.textContent = msg; el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 3000);
+        }
+        init();
+    </script>
+</body>
+</html>
